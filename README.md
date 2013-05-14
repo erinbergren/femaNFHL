@@ -6,7 +6,7 @@ This page has information on flood zone/flood risk designation data from Federal
 FEMA provides a variety of flood risk maps, most popular ones being the flood insurance rate maps (FIRMs). The [product catalog](https://msc.fema.gov/webapp/wcs/stores/servlet/StoreCatalogDisplay?storeId=10001&catalogId=10001&langId=-1&userType=G) from FEMA lists these products. More information is also available from FEMA's [map service center](https://msc.fema.gov/).
 
 After scanning through FEMA's [product catalog](https://msc.fema.gov/webapp/wcs/stores/servlet/StoreCatalogDisplay?storeId=10001&catalogId=10001&langId=-1&userType=G) and this [FEMA document](http://www.fema.gov/library/viewRecord.do?id=3474) and the below websites, the NFHL dataset is your best bet if you do not want to spend money. If you have money to spend and/or if you want information specific to a neighborhood or community, then use the other products in the catalog.
-* A good description of what NHFL is from the State of Massachussetts' [GIS dept](http://www.mass.gov/anf/research-and-tech/it-serv-and-support/application-serv/office-of-geographic-information-massgis/datalayers/nfhl.html)
+* A good description of what NFHL is from the State of Massachussetts' [GIS dept](http://www.mass.gov/anf/research-and-tech/it-serv-and-support/application-serv/office-of-geographic-information-massgis/datalayers/nfhl.html)
 * PDF from a FEMA [workshop at Michael Baker Corp](http://www.bakeraecom.com/wp-content/upLoads/2010/03/DFIRM101_Workshop1.pdf), 3/2010
 * PDF from a [seminar by FEMA at Montana DNRC?](http://www.dnrc.mt.gov/wrd/water_op/floodplain/2009_seminar/gis_basics_for_floodplain_mgmt.pdf), 4/2009
 
@@ -51,8 +51,11 @@ The most relevant variable in the above list is "FLD_ZONE" which could take one 
 * Unknown Risk: "D"
 
 
-Othe related and useful websites:
+Other useful websites:
 --------------------
 * [Flood map viewer from FEMA](https://hazards.fema.gov/wps/portal/mapviewer)
 * [Hazard Map Viewer from FEMA](https://hazards.fema.gov/femaportal/wps/portal/mmvmapviewer)
 * [FEMA 100-yr Flood zones map for the US](http://www.arcgis.com/home/webmap/viewer.html?webmap=2e38c1d9c2494fcfbe21384f3ddfecb4)
+* [Web Map Service for the NFHL](https://hazards.fema.gov/femaportal/wps/portal/NFHLWMS)
+* [Google Earth KMZ files](https://hazards.fema.gov/femaportal/wps/portal/NFHLWMSkmzdownload)
+
