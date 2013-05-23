@@ -1,4 +1,4 @@
-# read FEMA NFHL shapefiles and write out only flood zone risk classification data
+# read FEMA NFHL data and reclassify/rename the flood zone data
 
 library(foreign)
 
