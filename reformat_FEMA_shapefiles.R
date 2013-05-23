@@ -1,9 +1,6 @@
 # read FEMA NFHL shapefiles and write out only flood zone risk classification data
 
-library(rgdal) # for reading and editing shapefiles
 library(foreign)
-# library(maptools) # for reading and editing shapefiles
-# library(PBSmapping)
 
 # function to change FEMA flood zone descriptor names to concise ones
 # high risk (A and V = 100)
@@ -60,13 +57,16 @@ fips <- list('AK'='02', 'AL'='01', 'AR'='05', 'AS'='60', 'AZ'='04',
              'TN'='47', 'TX'='48', 'UT'='49', 'VA'='51', 'VI'='78', 
              'VT'='50', 'WA'='53', 'WI'='55', 'WV'='54', 'WY'='56')
 
+#-------------------------------------------------------------------------------
 # process data
-dataPath <- "../FEMA NFHL/"
-# GA (10), NY (32), NC (33), TX (43) issues 
-# for (eachDir in c(44:50)) {
-for (eachDir in c(32)) {
+inDataPath  <- "FEMA NFHL/raw/" # original data
+outDataPath <- "FEMA NFHL/formatted/" # processed data
+
+for (eachDir in c(1:50)) {
+# for (eachDir in c(2)) {
   # name of the folder
-  dirName <- list.dirs(paste0(dataPath, "/raw/", eachDir, "-55"))[2]
+  dirName <- list.dirs(paste0(inDataPath, eachDir, "-55"))[2]
+  
   # extract fips code
   stateFips <- rev(unlist(strsplit(dirName, "/")))[1]
   stateFips <- (unlist(strsplit(stateFips, "_")))[1]
@@ -74,21 +74,22 @@ for (eachDir in c(32)) {
 
   cat(eachDir, stateFips, "\n")
   
-  # read shapefile data
-  inputShp <- readOGR(dirName, "S_FLD_HAZ_AR")
-#   inputShp <- readShapePoly(paste0(dirName, "/S_FLD_HAZ_AR"))
-#     inputShp <- importShapefile(paste0(dirName, "/S_FLD_HAZ_AR"))
+  # copy all the relevant files 
+  dataFiles <- list.files(dirName)[grep("FLD_HAZ_AR", list.files(dirName))]
+  for (eachFile in dataFiles) {
+    fileExtn <- unlist(strsplit(eachFile, "[.]"))[2] # file extension
+    file.copy(paste0(dirName, "/", eachFile), 
+              paste0(outDataPath, stateFips, ".", fileExtn),
+              overwrite = TRUE)
+  }
   
-  inputDbf <- read.dbf("../FEMA NFHL//raw/32-55//36_NFHL_20090818//S_FLD_HAZ_AR.dbf", as.is=TRUE)
-  inputDbf$FLD_ZONE <- sapply(inputDbf$FLD_ZONE, FnRenameFloodZones)
-  
-  
-  
+  # read data from the dbf (newly created copy)
+  inputDbf <- read.dbf(paste0(outDataPath, stateFips, ".dbf"), as.is=TRUE)
+                       
   # rename flood zones
-#   levels(as.factor(inputShp$FLD_ZONE))
-  inputShp$FLD_ZONE <- sapply(inputShp$FLD_ZONE, FnRenameFloodZones)
-  # write output
-  writeOGR(inputShp, paste0(dataPath, "/formatted"), stateFips, 
-           driver = "ESRI Shapefile", overwrite_layer = TRUE)
-}
+  #   levels(as.factor(inputDbf$FLD_ZONE))
+  inputDbf$FLD_ZONE <- sapply(inputDbf$FLD_ZONE, FnRenameFloodZones)
 
+  # write output
+  write.dbf(inputDbf, paste0(outDataPath, stateFips, ".dbf"), max_nchar = 500)
+}
