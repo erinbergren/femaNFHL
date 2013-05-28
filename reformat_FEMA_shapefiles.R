@@ -21,11 +21,11 @@ FnRenameFloodZones <- function(x) {
                "1 PCT ANNUAL CHANCE FLOOD HAZARD CONTAINED IN CHANNEL",
                "1 PCT FUTURE CONDITIONS",
                "OPEN WATER")) {
-    return ("100")
+    return ("1")
     
   } else if (x %in% c("B", 
                       "SHX")) {
-    return ("200")
+    return ("4")
     
   } else if (x %in% c("C", 
                       "X", 
@@ -33,11 +33,11 @@ FnRenameFloodZones <- function(x) {
                       "0.2 PCT ANNUAL CHANCE FLOOD HAZARD CONTAINED IN CHANNEL",
                       "0.2 PCT CHA", 
                       "X PROTECTED BY LEVEE")) {
-    return ("300")
+    return ("7")
     
   } else if (x %in% c("D", 
                       "AREA NOT INCLUDED")) {
-    return ("400")
+    return ("10")
     
   } else {
     stop("check! unknown flood zone!")
