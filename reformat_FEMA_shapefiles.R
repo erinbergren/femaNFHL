@@ -36,11 +36,12 @@ FnRenameFloodZones <- function(x) {
     return ("7")
     
   } else if (x %in% c("D", 
-                      "AREA NOT INCLUDED")) {
-    return ("10")
+                      "AREA NOT INCLUDED",
+                      NA)) {
+    return ("9")
     
   } else {
-    stop("check! unknown flood zone!")
+    stop(paste(x, "check! unknown flood zone!"))
   }
 }
 
@@ -59,37 +60,41 @@ fips <- list('AK'='02', 'AL'='01', 'AR'='05', 'AS'='60', 'AZ'='04',
 
 #-------------------------------------------------------------------------------
 # process data
-inDataPath  <- "FEMA NFHL/raw/" # original data
+inDataPath  <- "FEMA NFHL/raw_v1/" # original data
 outDataPath <- "FEMA NFHL/formatted/" # processed data
 
-for (eachDir in c(1:50)) {
-# for (eachDir in c(2)) {
-  # name of the folder
-  dirName <- list.dirs(paste0(inDataPath, eachDir, "-55"))[2]
+dataDirs <- list.dirs(inDataPath)
+dataDirs <- dataDirs[grep("_NFHL_", dataDirs)]
+
+for (eachDir in dataDirs) {
   
   # extract fips code
-  stateFips <- rev(unlist(strsplit(dirName, "/")))[1]
+  stateFips <- rev(unlist(strsplit(eachDir, "/")))[1]
   stateFips <- (unlist(strsplit(stateFips, "_")))[1]
-  stateFips <- names(fips[which(fips == stateFips)])
-
-  cat(eachDir, stateFips, "\n")
   
-  # copy all the relevant files 
-  dataFiles <- list.files(dirName)[grep("FLD_HAZ_AR", list.files(dirName))]
-  for (eachFile in dataFiles) {
-    fileExtn <- unlist(strsplit(eachFile, "[.]"))[2] # file extension
-    file.copy(paste0(dirName, "/", eachFile), 
-              paste0(outDataPath, stateFips, ".", fileExtn),
-              overwrite = TRUE)
+  # for lower 48 + DC + AK + HI
+  if (as.numeric(stateFips) <= 56) {
+    stateFips <- names(fips[which(fips == stateFips)])
+  
+    cat(eachDir, stateFips, "\n")
+    
+    # copy all the relevant files 
+    dataFiles <- list.files(eachDir)[grep("FLD_HAZ_AR", list.files(eachDir))]
+    for (eachFile in dataFiles) {
+      fileExtn <- unlist(strsplit(eachFile, "[.]"))[2] # file extension
+      file.copy(paste0(eachDir, "/", eachFile), 
+                paste0(outDataPath, stateFips, ".", fileExtn),
+                overwrite = TRUE)
+    }
+    
+    # read data from the dbf (newly created copy)
+    inputDbf <- read.dbf(paste0(outDataPath, stateFips, ".dbf"), as.is=TRUE)
+                         
+    # rename flood zones
+    #   levels(factor(inputDbf$FLD_ZONE, exclude = NULL))
+    inputDbf$FLD_ZONE <- sapply(inputDbf$FLD_ZONE, FnRenameFloodZones)
+  
+    # write output
+    write.dbf(inputDbf, paste0(outDataPath, stateFips, ".dbf"), max_nchar = 500)
   }
-  
-  # read data from the dbf (newly created copy)
-  inputDbf <- read.dbf(paste0(outDataPath, stateFips, ".dbf"), as.is=TRUE)
-                       
-  # rename flood zones
-  #   levels(as.factor(inputDbf$FLD_ZONE))
-  inputDbf$FLD_ZONE <- sapply(inputDbf$FLD_ZONE, FnRenameFloodZones)
-
-  # write output
-  write.dbf(inputDbf, paste0(outDataPath, stateFips, ".dbf"), max_nchar = 500)
 }

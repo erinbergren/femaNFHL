@@ -13,7 +13,7 @@ After scanning through FEMA's [product catalog](https://msc.fema.gov/webapp/wcs/
 
 ### Where to get the NFHL GIS data and what to get
 
-You can get the [NFHL database](https://msc.fema.gov/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10001&storeId=10001&categoryId=12011&langId=-1&userType=G&type=12) by state. Be prepared to copy 50+ DVDs if you order the data for the entire US.
+You can get the [NFHL database](https://msc.fema.gov/webapp/wcs/stores/servlet/CategoryDisplay?catalogId=10001&storeId=10001&categoryId=12011&langId=-1&userType=G&type=12) by state. 
 
 
 Attributes of the NFHL Shapefiles
